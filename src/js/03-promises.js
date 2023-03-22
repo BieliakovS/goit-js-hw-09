@@ -9,7 +9,7 @@ form.addEventListener('submit', e => {
   const stepInput = form.elements.step;
   const amountInput = form.elements.amount;
 
-  const delay = Number(delayInput.value);
+  let delay = Number(delayInput.value);
   const step = Number(stepInput.value);
   const amount = Number(amountInput.value);
 
@@ -17,18 +17,18 @@ form.addEventListener('submit', e => {
   stepInput.value = '';
   amountInput.value = '';
 
-  let nextDelay = delay;
+  let delayArray = [];
 
   for (let i = 0; i < amount; i += 1) {
-    createPromise(i + 1, nextDelay)
+    createPromise(i + 1, delay)
       .then(result => {
-        Notify.success(`✅ Fulfilled promise ${i + 1} in ${delay}ms`);
+        Notify.success(`✅ Fulfilled promise ${i + 1} in ${delayArray[i]}ms`);
       })
       .catch(error => {
-        Notify.failure(`❌ Rejected promise ${i + 1} in ${delay}ms`);
+        Notify.failure(`❌ Rejected promise ${i + 1} in ${delayArray[i]}ms`);
       });
 
-    nextDelay += step;
+    delayArray.push((delay += step));
   }
 });
 
