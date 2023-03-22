@@ -13,42 +13,35 @@ form.addEventListener('submit', e => {
   const step = Number(stepInput.value);
   const amount = Number(amountInput.value);
 
+  delayInput.value = '';
+  stepInput.value = '';
+  amountInput.value = '';
+
   let nextDelay = delay;
 
-  for (let i = 1; i <= amount; i += 1) {
-    if (i !== 1) {
-      nextDelay += step;
-      createPromise(i, nextDelay);
-    } else {
-      createPromise(i, delay);
-    }
+  for (let i = 0; i < amount; i += 1) {
+    createPromise(i + 1, nextDelay)
+      .then(result => {
+        Notify.success(`✅ Fulfilled promise ${i + 1} in ${delay}ms`);
+      })
+      .catch(error => {
+        Notify.failure(`❌ Rejected promise ${i + 1} in ${delay}ms`);
+      });
+
+    nextDelay += step;
   }
 });
 
 function createPromise(position, delay) {
-  const promise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       const shouldResolve = Math.random() > 0.3;
 
       if (shouldResolve) {
-        resolve(
-          { position, delay },
-          Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`)
-        );
+        resolve({ position, delay });
       } else {
-        reject(
-          { position, delay },
-          Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`)
-        );
+        reject({ position, delay });
       }
     }, delay);
   });
 }
-
-promise
-  .then(result => {
-    console.log(result);
-  })
-  .catch(error => {
-    console.log(error);
-  });
