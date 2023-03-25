@@ -13,10 +13,6 @@ form.addEventListener('submit', e => {
   const step = Number(stepInput.value);
   const amount = Number(amountInput.value);
 
-  delayInput.value = '';
-  stepInput.value = '';
-  amountInput.value = '';
-
   let delayArray = [];
 
   for (let i = 0; i < amount; i += 1) {
@@ -30,6 +26,7 @@ form.addEventListener('submit', e => {
 
     delayArray.push((delay += step));
   }
+  e.target.reset();
 });
 
 function createPromise(position, delay) {
